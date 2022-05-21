@@ -1,5 +1,5 @@
-import React from "react";
-import { HTMLInputTypeAttribute } from "react";
+import React from 'react';
+import { HTMLInputTypeAttribute } from 'react';
 
 type Input = React.ElementType;
 
@@ -21,81 +21,35 @@ export class InputRepository {
   // Initialized with defaults
   // Needs to be able to handle a ref
   private inputs: Record<HTMLInputTypeAttribute, Input> = {
-    button: React.forwardRef((props: any, ref: any) => (
-      <input type="button" ref={ref} {...props} />
-    )),
-    checkbox: React.forwardRef((props: any, ref: any) => (
-      <input type="checkbox" ref={ref} {...props} />
-    )),
-    color: React.forwardRef((props: any, ref: any) => (
-      <input type="color" ref={ref} {...props} />
-    )),
-    date: React.forwardRef((props: any, ref: any) => (
-      <input type="date" ref={ref} {...props} />
-    )),
-    "datetime-local": React.forwardRef((props: any, ref: any) => (
-      <input type="datetime-local" ref={ref} {...props} />
-    )),
-    email: React.forwardRef((props: any, ref: any) => (
-      <input type="email" ref={ref} {...props} />
-    )),
-    file: React.forwardRef((props: any, ref: any) => (
-      <input type="file" ref={ref} {...props} />
-    )),
-    hidden: React.forwardRef((props: any, ref: any) => (
-      <input type="hidden" ref={ref} {...props} />
-    )),
-    image: React.forwardRef((props: any, ref: any) => (
-      <input type="image" ref={ref} {...props} />
-    )),
-    month: React.forwardRef((props: any, ref: any) => (
-      <input type="month" ref={ref} {...props} />
-    )),
-    number: React.forwardRef((props: any, ref: any) => (
-      <input type="number" ref={ref} {...props} />
-    )),
-    password: React.forwardRef((props: any, ref: any) => (
-      <input type="password" ref={ref} {...props} />
-    )),
-    radio: React.forwardRef((props: any, ref: any) => (
-      <input type="radio" ref={ref} {...props} />
-    )),
-    range: React.forwardRef((props: any, ref: any) => (
-      <input type="range" ref={ref} {...props} />
-    )),
-    reset: React.forwardRef((props: any, ref: any) => (
-      <input type="reset" ref={ref} {...props} />
-    )),
-    search: React.forwardRef((props: any, ref: any) => (
-      <input type="search" ref={ref} {...props} />
-    )),
-    submit: React.forwardRef((props: any, ref: any) => (
-      <input type="submit" ref={ref} {...props} />
-    )),
-    tel: React.forwardRef((props: any, ref: any) => (
-      <input type="tel" ref={ref} {...props} />
-    )),
-    text: React.forwardRef((props: any, ref: any) => (
-      <input type="text" ref={ref} {...props} />
-    )),
-    time: React.forwardRef((props: any, ref: any) => (
-      <input type="time" ref={ref} {...props} />
-    )),
-    url: React.forwardRef((props: any, ref: any) => (
-      <input type="url" ref={ref} {...props} />
-    )),
-    week: React.forwardRef((props: any, ref: any) => (
-      <input type="week" ref={ref} {...props} />
-    )),
+    button: React.forwardRef((props: any, ref: any) => <button ref={ref} {...props} />),
+    checkbox: React.forwardRef((props: any, ref: any) => <input type="checkbox" ref={ref} {...props} />),
+    color: React.forwardRef((props: any, ref: any) => <input type="color" ref={ref} {...props} />),
+    date: React.forwardRef((props: any, ref: any) => <input type="date" ref={ref} {...props} />),
+    'datetime-local': React.forwardRef((props: any, ref: any) => <input type="datetime-local" ref={ref} {...props} />),
+    email: React.forwardRef((props: any, ref: any) => <input type="email" ref={ref} {...props} />),
+    file: React.forwardRef((props: any, ref: any) => <input type="file" ref={ref} {...props} />),
+    hidden: React.forwardRef((props: any, ref: any) => <input type="hidden" ref={ref} {...props} />),
+    image: React.forwardRef((props: any, ref: any) => <input type="image" ref={ref} {...props} />),
+    month: React.forwardRef((props: any, ref: any) => <input type="month" ref={ref} {...props} />),
+    number: React.forwardRef((props: any, ref: any) => <input type="number" ref={ref} {...props} />),
+    password: React.forwardRef((props: any, ref: any) => <input type="password" ref={ref} {...props} />),
+    radio: React.forwardRef((props: any, ref: any) => <input type="radio" ref={ref} {...props} />),
+    range: React.forwardRef((props: any, ref: any) => <input type="range" ref={ref} {...props} />),
+    reset: React.forwardRef((props: any, ref: any) => <input type="reset" ref={ref} {...props} />),
+    search: React.forwardRef((props: any, ref: any) => <input type="search" ref={ref} {...props} />),
+    submit: React.forwardRef((props: any, ref: any) => <button type="submit" ref={ref} {...props} />),
+    tel: React.forwardRef((props: any, ref: any) => <input type="tel" ref={ref} {...props} />),
+    text: React.forwardRef((props: any, ref: any) => <input type="text" ref={ref} {...props} />),
+    time: React.forwardRef((props: any, ref: any) => <input type="time" ref={ref} {...props} />),
+    url: React.forwardRef((props: any, ref: any) => <input type="url" ref={ref} {...props} />),
+    week: React.forwardRef((props: any, ref: any) => <input type="week" ref={ref} {...props} />),
   };
 
   public get(type: HTMLInputTypeAttribute): Input {
     const input = this.inputs[type];
 
     if (!input) {
-      console.error(
-        `Input of type ${type} does not exist in repository. Unable to render component`
-      );
+      console.error(`Input of type ${type} does not exist in repository. Unable to render component`);
     }
 
     return input;
