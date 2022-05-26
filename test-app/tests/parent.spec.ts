@@ -1,7 +1,7 @@
-import { parentObject } from "./../src/parentTestData";
+import { parentObject } from "../src/parentTestData";
 import { test, expect } from "@playwright/test";
 
-test.describe("New Todo", () => {
+test.describe("Parent page", () => {
   test("should be able to edit all fields", async ({ page }) => {
     await page.goto("localhost:3000/parent");
 

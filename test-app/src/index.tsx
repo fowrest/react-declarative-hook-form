@@ -4,6 +4,7 @@ import "./index.css";
 import Parent from "./Parent";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import UserPets from "./UserPets";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,6 +14,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/parent" element={<Parent />} />
+        <Route path="/pets" element={<UserPets />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
