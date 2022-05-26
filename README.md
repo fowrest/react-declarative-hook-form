@@ -1,7 +1,116 @@
 # React Declarative Hook Form
 
-Library for creating declarative forms for React using the power of react-hook-form and TypeScript.
+This library allows you to create forms without dealing with any JSX but still leverage the work from the [react-hook-form](https://github.com/react-hook-form/react-hook-form) ecosystem.
+The idea for this library is to be able to automatically generate a form based on a schema and pre-fill the form with a json object.
 
 ## Example
 
+More examples can be found in the the test-app directory were the library is tested with playwright.
+
+Simple user form with no pre filled data.
+
+```typescript
+const user: Schema = {
+  name: {
+    type: "text",
+  },
+  password: {
+    type: "password",
+  },
+};
+
+const [result, setResult] = useState<typeof user>();
+return <DeclarativeForm<typeof user> schema={user} onSubmit={setResult} />;
+```
+
+User schema with pets as an array that can be dynamically added in the form
+
+```typescript
+const user: Schema = {
+  name: {
+    type: "text",
+  },
+  password: {
+    type: "password",
+  },
+  pets: [
+    {
+      name: { type: "text" },
+      age: { type: "number" },
+    },
+  ],
+};
+
+const userFromDatabase = {
+  name: "Bob",
+  password: "abc",
+  pets: [
+    { name: "Alpha", age: 10 },
+    { name: "Beta", age: 5 },
+  ],
+};
+
+const [result, setResult] = useState<typeof user>();
+return (
+  <DeclarativeForm<typeof user>
+    schema={user}
+    defaultValues={userFromDatabase}
+    onSubmit={setResult}
+  />
+);
+```
+
+User schema with pets and photo album with checkbox and photos.
+
+```typescript
+const user: Schema = {
+  name: {
+    type: "text",
+  },
+  password: {
+    type: "password",
+  },
+  pets: [
+    {
+      name: { type: "text" },
+      age: { type: "number" },
+    },
+  ],
+  photoAlbum: {
+    type: SpecialType.Meta,
+    children: {
+      public: { type: "checkbox" },
+      photos: [{ url: { type: "text" } }],
+    },
+  },
+};
+
+const userFromDatabase = {
+  name: "Bob",
+  password: "abc",
+  pets: [
+    { name: "Alpha", age: 10 },
+    { name: "Beta", age: 5 },
+  ],
+  photoAlbum: {
+    public: false,
+    photos: [
+      { url: "www.example.com/photo1" },
+      { url: "www.example.com/photo2" },
+    ],
+  },
+};
+
+const [result, setResult] = useState<typeof user>();
+return (
+  <DeclarativeForm<typeof user>
+    schema={user}
+    defaultValues={userFromDatabase}
+    onSubmit={setResult}
+  />
+);
+```
+
 ## Docs
+
+TODO
