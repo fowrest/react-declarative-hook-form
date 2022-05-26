@@ -3,6 +3,12 @@
 This library allows you to create forms without dealing with any JSX but still leverage the work from the [react-hook-form](https://github.com/react-hook-form/react-hook-form) ecosystem.
 The idea for this library is to be able to automatically generate a form based on a schema and pre-fill the form with a json object.
 
+# Installation & Usage
+
+`npm i react-hook-form react-declarative-hook-form`
+
+And import `react-hook-form` before importing `react-declarative-hook-form`
+
 ## Example
 
 More examples can be found in the the test-app directory were the library is tested with playwright.
