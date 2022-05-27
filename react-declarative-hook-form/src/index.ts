@@ -1,7 +1,7 @@
 import DeclarativeForm from './DeclarativeForm';
 import { InputRepository } from './inputRepository/InputRepository';
-import { Schema, SpecialType } from './Schema';
+import { Schema } from './Schema';
 
-export { SpecialType, InputRepository };
+export { InputRepository };
 export type { Schema };
 export default DeclarativeForm;

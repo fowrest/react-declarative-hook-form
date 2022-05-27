@@ -1,7 +1,7 @@
 import React, { FC, HTMLInputTypeAttribute } from 'react';
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form';
 import { InputRepository } from './inputRepository/InputRepository';
-import { Schema, SpecialType, Input, SchemaInput } from './Schema';
+import { Schema, Input, SchemaInput } from './Schema';
 
 interface SchemaArrayHandlerProps {
   register: UseFormRegister<Record<string, any>>;
@@ -19,6 +19,10 @@ const getIdentityValue = (type: HTMLInputTypeAttribute) => {
   }
 };
 
+const isInput = (inputOrSchema: Input | Schema): inputOrSchema is Input => {
+  return typeof inputOrSchema.type === 'string';
+};
+
 const getObjectStructure = (schema: Schema) => {
   const structure: Record<string, any> = {};
   Object.keys(schema).forEach((schemaKey) => {
@@ -28,11 +32,10 @@ const getObjectStructure = (schema: Schema) => {
     if (isArray) {
       structure[schemaKey] = [getObjectStructure(data[0])];
     } else {
-      const isMetaInput = data.type === SpecialType.Meta;
-      if (isMetaInput) {
-        structure[schemaKey] = getObjectStructure(data.children);
-      } else {
+      if (isInput(data)) {
         structure[schemaKey] = getIdentityValue(data.type);
+      } else {
+        structure[schemaKey] = getObjectStructure(data);
       }
     }
   });
@@ -101,8 +104,8 @@ function handleSchemaInput(
       />,
     ];
   } else {
-    if (schemaInput.type === SpecialType.Meta) {
-      return Object.entries(schemaInput.children).flatMap(([childKey, child]) => {
+    if (!isInput(schemaInput)) {
+      return Object.entries(schemaInput).flatMap(([childKey, child]) => {
         if (Array.isArray(child)) {
           const [schema] = child;
 

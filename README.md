@@ -83,11 +83,8 @@ const user: Schema = {
     },
   ],
   photoAlbum: {
-    type: SpecialType.Meta,
-    children: {
-      public: { type: "checkbox" },
-      photos: [{ url: { type: "text" } }],
-    },
+    public: { type: "checkbox" },
+    photos: [{ url: { type: "text" } }],
   },
 };
 
