@@ -1,8 +1,5 @@
 import "react-hook-form";
-import DeclarativeForm, {
-  Schema,
-  SpecialType,
-} from "react-declarative-hook-form";
+import DeclarativeForm, { Schema } from "react-declarative-hook-form";
 import { useState } from "react";
 import { userFromDatabase } from "./userPetsTestData";
 
@@ -20,11 +17,8 @@ const user: Schema = {
     },
   ],
   photoAlbum: {
-    type: SpecialType.Meta,
-    children: {
-      public: { type: "checkbox" },
-      photos: [{ url: { type: "text" } }],
-    },
+    public: { type: "checkbox" },
+    photos: [{ url: { type: "text" } }],
   },
 };
 

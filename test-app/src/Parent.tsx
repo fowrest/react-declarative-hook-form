@@ -1,8 +1,5 @@
 import "react-hook-form";
-import DeclarativeForm, {
-  Schema,
-  SpecialType,
-} from "react-declarative-hook-form";
+import DeclarativeForm, { Schema } from "react-declarative-hook-form";
 import { useState } from "react";
 import { parentObject } from "./parentTestData";
 
@@ -11,14 +8,11 @@ const child: Schema = {
     type: "text",
   },
   measurement: {
-    type: SpecialType.Meta,
-    children: {
-      height: {
-        type: "number",
-      },
-      weight: {
-        type: "number",
-      },
+    height: {
+      type: "number",
+    },
+    weight: {
+      type: "number",
     },
   },
   friends: [{ friend: { type: "text" } }],
@@ -33,13 +27,10 @@ const parent: Schema = {
     type: "text",
   },
   kids: {
-    type: SpecialType.Meta,
-    children: {
-      favorite: {
-        type: "text",
-      },
-      data: [child],
+    favorite: {
+      type: "text",
     },
+    data: [child],
   },
   phoneNumbers: [
     {
