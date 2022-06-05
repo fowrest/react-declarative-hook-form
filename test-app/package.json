@@ -14,7 +14,7 @@
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
     "react": "^18.1.0",
-    "react-declarative-hook-form": "^1.0.0-rc5",
+    "react-declarative-hook-form": "^1.0.0-rc6",
     "react-dom": "^18.1.0",
     "react-hook-form": "^7.31.1",
     "react-router-dom": "^6.3.0",

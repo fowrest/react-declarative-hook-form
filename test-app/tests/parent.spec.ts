@@ -125,4 +125,41 @@ test.describe("Parent page", () => {
       JSON.stringify(expectedForm)
     );
   });
+
+  test("should be able to remove data from form", async ({ page }) => {
+    await page.goto("localhost:3000/parent");
+
+    await page.locator("id=kids.data-0-close").click();
+
+    await page.locator('//button[@type="submit"]').click();
+
+    let expectedForm = JSON.parse(JSON.stringify(parentObject));
+    expectedForm.kids.data.splice(0, 1);
+
+    expect(await page.locator("#result").innerHTML()).toBe(
+      JSON.stringify(expectedForm)
+    );
+  });
+
+  test("should be able to remove data that was user added", async ({
+    page,
+  }) => {
+    await page.goto("localhost:3000/parent");
+
+    await page.locator("//button >> nth=0").click();
+    await page.locator("//button >> nth=0").click();
+    await page.locator("//button >> nth=0").click();
+
+    await page.locator("id=kids.data.0.friends-2-close").click();
+    await page.locator("id=kids.data.0.friends-2-close").click();
+
+    await page.locator('//button[@type="submit"]').click();
+
+    let expectedForm = JSON.parse(JSON.stringify(parentObject));
+    expectedForm.kids.data[0].friends.push({ friend: "" });
+
+    expect(await page.locator("#result").innerHTML()).toBe(
+      JSON.stringify(expectedForm)
+    );
+  });
 });
