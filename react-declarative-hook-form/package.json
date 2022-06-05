@@ -1,7 +1,7 @@
 {
   "name": "react-declarative-hook-form",
-  "version": "1.0.0-rc6",
-  "description": "",
+  "version": "1.0.0-rc7",
+  "description": "Library to automatically generate forms and pre-fill with external data.",
   "files": [
     "dist"
   ],

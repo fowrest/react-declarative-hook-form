@@ -2,9 +2,8 @@ import React, { FC } from 'react';
 
 const Close: FC = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#000000">
-      <path d="M0 0h24v24H0z" fill="none" />
-      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20">
+      <path d="M5.375 15.854 4.146 14.625 8.771 10 4.146 5.375 5.375 4.146 10 8.771 14.625 4.146 15.854 5.375 11.229 10 15.854 14.625 14.625 15.854 10 11.229Z" />
     </svg>
   );
 };

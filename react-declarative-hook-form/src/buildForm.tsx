@@ -3,6 +3,7 @@ import { Control, useFieldArray, UseFormRegister } from 'react-hook-form';
 import { InputRepository } from './inputRepository/InputRepository';
 import { Schema, Input, SchemaInput } from './Schema';
 import Close from './Close';
+import Add from './Add';
 
 interface SchemaArrayHandlerProps {
   register: UseFormRegister<Record<string, any>>;
@@ -50,8 +51,6 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
     name: stringPath,
   });
 
-  const Button = InputRepository.getRepository().get('button');
-
   return (
     <div
       style={{
@@ -80,9 +79,9 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
         </div>
       ))}
 
-      <Button style={{ alignSelf: 'end' }} onClick={() => append(getObjectStructure(schema))}>
-        +
-      </Button>
+      <div id={`${stringPath}-add`} style={{ alignSelf: 'end' }} onClick={() => append(getObjectStructure(schema))}>
+        <Add />
+      </div>
     </div>
   );
 };
