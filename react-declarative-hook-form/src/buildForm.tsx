@@ -2,6 +2,7 @@ import React, { FC, HTMLInputTypeAttribute } from 'react';
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form';
 import { InputRepository } from './inputRepository/InputRepository';
 import { Schema, Input, SchemaInput } from './Schema';
+import Close from './Close';
 
 interface SchemaArrayHandlerProps {
   register: UseFormRegister<Record<string, any>>;
@@ -44,7 +45,7 @@ const getObjectStructure = (schema: Schema) => {
 };
 
 const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, stringPath, schema }) => {
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: stringPath,
   });
@@ -57,12 +58,27 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
-        padding: 5,
-        marginLeft: 20,
+        margin: 2,
+        backgroundColor: 'rgba(0,0,0, 0.03)',
         border: '1px solid black',
+        flex: '1 0 calc(100% - 20px)',
+        boxSizing: 'border-box',
       }}
     >
-      {fields.map((_, index: number) => handleSchema(schema, register, control, `${stringPath}.${index}`))}
+      {fields.map((_, index: number) => (
+        <div style={{ display: 'flex', borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', margin: 2 }}>
+            {handleSchema(schema, register, control, `${stringPath}.${index}`)}
+          </div>
+          <div
+            id={`${stringPath}-${index}-close`}
+            style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}
+            onClick={() => remove(index)}
+          >
+            <Close />
+          </div>
+        </div>
+      ))}
 
       <Button style={{ alignSelf: 'end' }} onClick={() => append(getObjectStructure(schema))}>
         +

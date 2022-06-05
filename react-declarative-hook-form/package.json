@@ -1,6 +1,6 @@
 {
   "name": "react-declarative-hook-form",
-  "version": "1.0.0-rc5",
+  "version": "1.0.0-rc6",
   "description": "",
   "files": [
     "dist"
@@ -12,7 +12,8 @@
   },
   "scripts": {
     "compile": "tsc",
-    "compile.watch": "tsc --watch true"
+    "compile.watch": "tsc --watch true",
+    "prepublish": "tsc"
   },
   "author": "",
   "license": "MIT",
