@@ -89,14 +89,14 @@ test.describe("Parent page", () => {
     const newFriend = "new kid";
 
     // First friend plus button
-    await page.locator("//button >> nth=0").click();
+    await page.locator("id=kids.data.0.friends-add").click();
 
     await page
       .locator('//input[@name="kids.data.0.friends.1.friend"]')
       .fill(newFriend);
 
     // New kid
-    await page.locator("//button >> nth=2").click();
+    await page.locator("id=kids.data-add").click();
 
     // Kid 3
     await page.locator('//input[@name="kids.data.2.name"]').fill(kid3.name);
@@ -146,9 +146,9 @@ test.describe("Parent page", () => {
   }) => {
     await page.goto("localhost:3000/parent");
 
-    await page.locator("//button >> nth=0").click();
-    await page.locator("//button >> nth=0").click();
-    await page.locator("//button >> nth=0").click();
+    await page.locator("id=kids.data.0.friends-add").click();
+    await page.locator("id=kids.data.0.friends-add").click();
+    await page.locator("id=kids.data.0.friends-add").click();
 
     await page.locator("id=kids.data.0.friends-2-close").click();
     await page.locator("id=kids.data.0.friends-2-close").click();
