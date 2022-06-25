@@ -1,4 +1,4 @@
-import React, { FC, HTMLInputTypeAttribute } from 'react';
+import React, { FC, HTMLInputTypeAttribute, useCallback, useMemo, useState } from 'react';
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form';
 import { InputRepository } from './inputRepository/InputRepository';
 import { Schema, Input, SchemaInput } from './Schema';
@@ -46,10 +46,33 @@ const getObjectStructure = (schema: Schema) => {
 };
 
 const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, stringPath, schema }) => {
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: stringPath,
   });
+
+  const [draggingIndex, setDraggingIndex] = useState<number | undefined>();
+
+  const onMoveEnd = useCallback(
+    (targetId: string) => {
+      if (draggingIndex !== undefined) {
+        let toBeIndex = targetId;
+        const pathIndexEnd = stringPath.length + 1;
+        toBeIndex = toBeIndex.substring(pathIndexEnd);
+
+        const indexEndIndex = toBeIndex.indexOf('-');
+        toBeIndex = toBeIndex.substring(0, indexEndIndex);
+
+        const targetIndex = Number.parseInt(toBeIndex);
+        if (Number.isNaN(targetIndex)) {
+          return;
+        }
+
+        move(draggingIndex, targetIndex);
+      }
+    },
+    [draggingIndex]
+  );
 
   return (
     <div
@@ -66,6 +89,25 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
     >
       {fields.map((_, index: number) => (
         <div style={{ display: 'flex', borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none' }}>
+          <div
+            id={`${stringPath}-${index}-drag`}
+            style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}
+            draggable={true}
+            onDragStart={() => setDraggingIndex(index)}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => onMoveEnd(e.currentTarget.id)}
+            onTouchStart={() => setDraggingIndex(index)}
+            onTouchEnd={(eEnd) => {
+              const elem = document.elementFromPoint(eEnd.changedTouches[0].clientX, eEnd.changedTouches[0].clientY);
+              const id = elem?.id;
+              if (id !== undefined) {
+                onMoveEnd(id);
+              }
+            }}
+            onTouchCancel={(e) => console.log('cancel')}
+          >
+            -
+          </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', margin: 2 }}>
             {handleSchema(schema, register, control, `${stringPath}.${index}`)}
           </div>
