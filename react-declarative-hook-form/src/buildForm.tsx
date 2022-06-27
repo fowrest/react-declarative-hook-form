@@ -2,8 +2,9 @@ import React, { FC, HTMLInputTypeAttribute, useCallback, useMemo, useState } fro
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form';
 import { InputRepository } from './inputRepository/InputRepository';
 import { Schema, Input, SchemaInput } from './Schema';
-import Close from './Close';
-import Add from './Add';
+import Close from './icons/Close';
+import Add from './icons/Add';
+import DragHandle from './icons/DragHandle';
 
 interface SchemaArrayHandlerProps {
   register: UseFormRegister<Record<string, any>>;
@@ -54,24 +55,29 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
   const [draggingIndex, setDraggingIndex] = useState<number | undefined>();
 
   const onMoveEnd = useCallback(
-    (targetId: string) => {
+    (targetId: string | number) => {
       if (draggingIndex !== undefined) {
-        let toBeIndex = targetId;
-        const pathIndexEnd = stringPath.length + 1;
-        toBeIndex = toBeIndex.substring(pathIndexEnd);
+        let targetIndex = targetId;
 
-        const indexEndIndex = toBeIndex.indexOf('-');
-        toBeIndex = toBeIndex.substring(0, indexEndIndex);
+        if (typeof targetIndex !== 'number') {
+          let toBeIndex = targetIndex;
+          const pathIndexEnd = stringPath.length + 1;
+          toBeIndex = toBeIndex.substring(pathIndexEnd);
 
-        const targetIndex = Number.parseInt(toBeIndex);
-        if (Number.isNaN(targetIndex)) {
-          return;
+          const indexEndIndex = toBeIndex.indexOf('-');
+          toBeIndex = toBeIndex.substring(0, indexEndIndex);
+
+          targetIndex = Number.parseInt(toBeIndex);
+          if (Number.isNaN(targetIndex)) {
+            return;
+          }
         }
 
         move(draggingIndex, targetIndex);
+        setDraggingIndex(targetIndex);
       }
     },
-    [draggingIndex]
+    [draggingIndex, setDraggingIndex]
   );
 
   return (
@@ -88,25 +94,34 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
       }}
     >
       {fields.map((_, index: number) => (
-        <div style={{ display: 'flex', borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none' }}>
+        <div
+          style={{
+            display: 'flex',
+            borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none',
+            ...(draggingIndex === index ? { opacity: 0.5 } : {}),
+          }}
+        >
           <div
             id={`${stringPath}-${index}-drag`}
             style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}
             draggable={true}
-            onDragStart={() => setDraggingIndex(index)}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => onMoveEnd(e.currentTarget.id)}
-            onTouchStart={() => setDraggingIndex(index)}
-            onTouchEnd={(eEnd) => {
-              const elem = document.elementFromPoint(eEnd.changedTouches[0].clientX, eEnd.changedTouches[0].clientY);
+            onDragStart={(e) => {
+              // e.dataTransfer.setDragImage();
+              setDraggingIndex(index);
+            }}
+            onDragOver={() => onMoveEnd(index)} // This is triggered on the drop target
+            onDrop={() => setDraggingIndex(undefined)}
+            onTouchMove={(e) => {
+              const elem = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
               const id = elem?.id;
               if (id !== undefined) {
                 onMoveEnd(id);
               }
             }}
-            onTouchCancel={(e) => console.log('cancel')}
+            onTouchStart={() => setDraggingIndex(index)}
+            onTouchEnd={() => setDraggingIndex(undefined)}
           >
-            -
+            <DragHandle />
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', margin: 2 }}>
             {handleSchema(schema, register, control, `${stringPath}.${index}`)}
