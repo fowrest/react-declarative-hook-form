@@ -99,18 +99,20 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
             display: 'flex',
             borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none',
             ...(draggingIndex === index ? { opacity: 0.5 } : {}),
+            cursor: 'pointer',
+          }}
+          // This is triggered on the drop target
+          onDragOver={(e) => {
+            e.preventDefault();
+            onMoveEnd(index);
           }}
         >
           <div
             id={`${stringPath}-${index}-drag`}
             style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}
             draggable={true}
-            onDragStart={(e) => {
-              // e.dataTransfer.setDragImage();
-              setDraggingIndex(index);
-            }}
-            onDragOver={() => onMoveEnd(index)} // This is triggered on the drop target
-            onDrop={() => setDraggingIndex(undefined)}
+            onDragStart={() => setDraggingIndex(index)}
+            onDragEnd={() => setDraggingIndex(undefined)}
             onTouchMove={(e) => {
               const elem = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
               const id = elem?.id;
