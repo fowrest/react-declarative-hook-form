@@ -46,6 +46,15 @@ const getObjectStructure = (schema: Schema) => {
   return structure;
 };
 
+const getTargetIdFromElements = (elements: Element[], idPattern: RegExp) => {
+  for (const elem of elements) {
+    if (idPattern.test(elem.id)) {
+      console.log('Match on id', elem.id);
+      return elem;
+    }
+  }
+};
+
 const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, stringPath, schema }) => {
   const { fields, append, remove, move } = useFieldArray({
     control,
@@ -95,11 +104,11 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
     >
       {fields.map((_, index: number) => (
         <div
+          id={`${stringPath}-${index}-target`}
           style={{
             display: 'flex',
             borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none',
             ...(draggingIndex === index ? { opacity: 0.5 } : {}),
-            cursor: 'pointer',
           }}
           // This is triggered on the drop target
           onDragOver={(e) => {
@@ -108,13 +117,14 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
           }}
         >
           <div
-            id={`${stringPath}-${index}-drag`}
+            id={`${stringPath}-${index}-handle`}
             style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}
             draggable={true}
             onDragStart={() => setDraggingIndex(index)}
             onDragEnd={() => setDraggingIndex(undefined)}
             onTouchMove={(e) => {
-              const elem = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+              const elements = document.elementsFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+              const elem = getTargetIdFromElements(elements, new RegExp(`^${stringPath}-[0-9]+-target$`));
               const id = elem?.id;
               if (id !== undefined) {
                 onMoveEnd(id);
