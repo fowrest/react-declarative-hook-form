@@ -162,4 +162,21 @@ test.describe("Parent page", () => {
       JSON.stringify(expectedForm)
     );
   });
+
+  test("should be able to reorder data in arrays", async ({ page }) => {
+    await page.goto("localhost:3000/parent");
+
+    await page.dragAndDrop("id=kids.data-1-handle", "id=kids.data-0-handle");
+
+    await page.locator('//button[@type="submit"]').click();
+
+    let expectedForm = JSON.parse(JSON.stringify(parentObject));
+    const tmp = expectedForm.kids.data[0];
+    expectedForm.kids.data[0] = expectedForm.kids.data[1];
+    expectedForm.kids.data[1] = tmp;
+
+    expect(await page.locator("#result").innerHTML()).toBe(
+      JSON.stringify(expectedForm)
+    );
+  });
 });
