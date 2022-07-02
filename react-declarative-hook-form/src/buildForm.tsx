@@ -1,9 +1,10 @@
-import React, { FC, HTMLInputTypeAttribute } from 'react';
+import React, { FC, HTMLInputTypeAttribute, useCallback, useMemo, useState } from 'react';
 import { Control, useFieldArray, UseFormRegister } from 'react-hook-form';
 import { InputRepository } from './inputRepository/InputRepository';
 import { Schema, Input, SchemaInput } from './Schema';
-import Close from './Close';
-import Add from './Add';
+import Close from './icons/Close';
+import Add from './icons/Add';
+import DragHandle from './icons/DragHandle';
 
 interface SchemaArrayHandlerProps {
   register: UseFormRegister<Record<string, any>>;
@@ -45,11 +46,48 @@ const getObjectStructure = (schema: Schema) => {
   return structure;
 };
 
+const getTargetIdFromElements = (elements: Element[], idPattern: RegExp) => {
+  for (const elem of elements) {
+    if (idPattern.test(elem.id)) {
+      console.log('Match on id', elem.id);
+      return elem;
+    }
+  }
+};
+
 const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, stringPath, schema }) => {
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: stringPath,
   });
+
+  const [draggingIndex, setDraggingIndex] = useState<number | undefined>();
+
+  const onMoveEnd = useCallback(
+    (targetId: string | number) => {
+      if (draggingIndex !== undefined) {
+        let targetIndex = targetId;
+
+        if (typeof targetIndex !== 'number') {
+          let toBeIndex = targetIndex;
+          const pathIndexEnd = stringPath.length + 1;
+          toBeIndex = toBeIndex.substring(pathIndexEnd);
+
+          const indexEndIndex = toBeIndex.indexOf('-');
+          toBeIndex = toBeIndex.substring(0, indexEndIndex);
+
+          targetIndex = Number.parseInt(toBeIndex);
+          if (Number.isNaN(targetIndex)) {
+            return;
+          }
+        }
+
+        move(draggingIndex, targetIndex);
+        setDraggingIndex(targetIndex);
+      }
+    },
+    [draggingIndex, setDraggingIndex]
+  );
 
   return (
     <div
@@ -65,7 +103,38 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
       }}
     >
       {fields.map((_, index: number) => (
-        <div style={{ display: 'flex', borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none' }}>
+        <div
+          id={`${stringPath}-${index}-target`}
+          style={{
+            display: 'flex',
+            borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none',
+            ...(draggingIndex === index ? { opacity: 0.5 } : {}),
+          }}
+          // This is triggered on the drop target
+          onDragOver={(e) => {
+            e.preventDefault();
+            onMoveEnd(index);
+          }}
+        >
+          <div
+            id={`${stringPath}-${index}-handle`}
+            style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}
+            draggable={true}
+            onDragStart={() => setDraggingIndex(index)}
+            onDragEnd={() => setDraggingIndex(undefined)}
+            onTouchMove={(e) => {
+              const elements = document.elementsFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+              const elem = getTargetIdFromElements(elements, new RegExp(`^${stringPath}-[0-9]+-target$`));
+              const id = elem?.id;
+              if (id !== undefined) {
+                onMoveEnd(id);
+              }
+            }}
+            onTouchStart={() => setDraggingIndex(index)}
+            onTouchEnd={() => setDraggingIndex(undefined)}
+          >
+            <DragHandle />
+          </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', margin: 2 }}>
             {handleSchema(schema, register, control, `${stringPath}.${index}`)}
           </div>
