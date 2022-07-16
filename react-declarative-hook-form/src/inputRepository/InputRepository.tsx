@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { HTMLInputTypeAttribute } from 'react';
 
 type Input = React.ElementType;
@@ -62,5 +62,30 @@ export class InputRepository {
    */
   public set(type: HTMLInputTypeAttribute, component: Input) {
     this.inputs[type] = component;
+  }
+
+  private wrapperComponent: React.ElementType = ({ children }) => (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        margin: 2,
+        backgroundColor: 'rgba(0,0,0, 0.03)',
+        border: '1px solid black',
+        flex: '1 0 calc(100% - 20px)',
+        boxSizing: 'border-box',
+      }}
+    >
+      {children}
+    </div>
+  );
+
+  public getWrapperComponent() {
+    return this.wrapperComponent;
+  }
+
+  public setWrapperComponent(wrapperComponent: React.ElementType) {
+    this.wrapperComponent = wrapperComponent;
   }
 }

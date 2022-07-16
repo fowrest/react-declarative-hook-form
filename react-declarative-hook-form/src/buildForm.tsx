@@ -89,22 +89,14 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
     [draggingIndex, setDraggingIndex]
   );
 
+  const WrapperComponent = InputRepository.getRepository().getWrapperComponent();
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-        margin: 2,
-        backgroundColor: 'rgba(0,0,0, 0.03)',
-        border: '1px solid black',
-        flex: '1 0 calc(100% - 20px)',
-        boxSizing: 'border-box',
-      }}
-    >
+    <WrapperComponent>
       {fields.map((_, index: number) => (
         <div
           id={`${stringPath}-${index}-target`}
+          key={`${stringPath}-${index}-target`}
           style={{
             display: 'flex',
             borderBottom: index !== fields.length - 1 ? '1px solid black' : 'none',
@@ -151,7 +143,7 @@ const SchemaArrayHandler: FC<SchemaArrayHandlerProps> = ({ register, control, st
       <div id={`${stringPath}-add`} style={{ alignSelf: 'end' }} onClick={() => append(getObjectStructure(schema))}>
         <Add />
       </div>
-    </div>
+    </WrapperComponent>
   );
 };
 
